@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Text
 from app.database.base_model import Base
 
 class Address(Base):
-    __tablename__ = "users"
+    __tablename__ = "addresses"
 
     id: int = Column(Integer, primary_key=True, index=True)
     country: str = Column(String(255), nullable=False)

@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 from app.database.base_model import Base
 
 class User(Base):
@@ -10,4 +11,5 @@ class User(Base):
     cpf: str = Column(String(14), unique=True, nullable=False)
     pis: str = Column(String(14), unique=True, nullable=False)
     password: int = Column(String(255), nullable=False)
-    address_id: int = Column(Integer, nullable=False, ForeignKey("addresses.id"))
+    address_id: int = Column(Integer, ForeignKey("addresses.id"))
+    address = relationship("Address", back_populates="users")
