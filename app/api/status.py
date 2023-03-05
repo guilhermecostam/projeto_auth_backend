@@ -1,12 +1,11 @@
-import os
 from fastapi import APIRouter, Depends
+from app.core.settings import settings
 
 router = APIRouter()
-APP_VERSION = os.getenv("APP_VERSION", "1.0.0")
 
 @router.get("/status")
 async def ping():
     return {
         "success": True,
-        "version": APP_VERSION
+        "version": settings.APP_VERSION
     }

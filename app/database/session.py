@@ -1,12 +1,9 @@
-import os
 import logging
-from dotenv import load_dotenv
 from typing import Callable, Optional
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from app.database.base_model import Base
-
-load_dotenv()
+from app.core.settings import settings
 
 __factory: Optional[Callable[[], Session]] = None
 log = logging.getLogger("uvicorn")
@@ -24,16 +21,8 @@ def global_init() -> None:
     if __factory:
         return
 
-    conn_str = "mysql+pymysql://{0}:{1}@{2}:{3}/{4}?charset=utf8mb4".format(
-        os.getenv('MYSQL_USER'),
-        os.getenv('MYSQL_PASSWORD'),
-        os.getenv('MYSQL_HOSTNAME'),
-        os.getenv('MYSQL_PORT'),
-        os.getenv('MYSQL_DATABASE')
-    )
-
     log.info("Connecting to the database...")
-    engine = create_engine(conn_str, echo=False)
+    engine = create_engine(settings.SQLALCHEMY_URI_CONN, echo=False)
     __factory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
     from app.models.user import User
