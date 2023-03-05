@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from app.core.settings import settings
 
-router = APIRouter()
+router = APIRouter(tags=["Status"])
 
 @router.get("/status")
 async def ping():
