@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+import datetime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from app.database.base_model import Base
 
@@ -13,3 +14,10 @@ class User(Base):
     password: int = Column(String(255), nullable=False)
     address_id: int = Column(Integer, ForeignKey("addresses.id"))
     address = relationship("Address", back_populates="users")
+
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(
+        DateTime,
+        default=datetime.datetime.utcnow,
+        onupdate=datetime.datetime.utcnow,
+    )

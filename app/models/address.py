@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Text
+import datetime
+from sqlalchemy import Column, Integer, String, DateTime, Text
 from app.database.base_model import Base
 
 class Address(Base):
@@ -12,3 +13,10 @@ class Address(Base):
     street: int = Column(String(255), nullable=False)
     number: int = Column(String(255), nullable=False)
     complement: int = Column(Text, nullable=True)
+
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(
+        DateTime,
+        default=datetime.datetime.utcnow,
+        onupdate=datetime.datetime.utcnow,
+    )
