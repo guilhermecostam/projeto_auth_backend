@@ -34,7 +34,12 @@ def global_init() -> None:
 
     log.info("Connecting to the database...")
     engine = create_engine(conn_str, echo=False)
-    __factory = sessionmaker(bind=engine)
+    __factory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+    from app.models.user import User
+    from app.models.address import Address
+
+    Base.metadata.create_all(engine)
 
 def create_session() -> Session:
     global __factory
