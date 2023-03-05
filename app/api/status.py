@@ -8,5 +8,5 @@ APP_VERSION = os.getenv("APP_VERSION", "1.0.0")
 async def ping():
     return {
         "success": True,
-        "version": APP_VERSION,
+        "version": APP_VERSION
     }
