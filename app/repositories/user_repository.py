@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.user import User
+from app.repositories.address_repository import AddressRepository
 
 class UserRepository:
     @staticmethod
@@ -24,5 +25,6 @@ class UserRepository:
     def delete_by_id(db: Session, id: int) -> None:
         user = db.query(User).filter(User.id == id).first()
         if user is not None:
+            AddressRepository.delete_by_id(db, user.address_id)
             db.delete(user)
             db.commit()

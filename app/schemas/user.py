@@ -7,12 +7,13 @@ class UserBase(BaseModel):
     email: EmailStr
     cpf: str
     pis: str
-    address_id: int
 
 class UserCreate(UserBase):
     password: str
+    address_id: Optional[int]
 
 class UserUpdate(UserBase):
+    address_id: int
     pass
 
 class UserResponse(UserBase):

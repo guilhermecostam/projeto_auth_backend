@@ -1,4 +1,5 @@
 from typing import Optional
+from datetime import datetime
 from pydantic import BaseModel
 
 class AddressBase(BaseModel):
@@ -14,12 +15,13 @@ class AddressCreate(AddressBase):
     pass
 
 class AddressUpdate(AddressBase):
+    id: Optional[int]
     pass
 
 class AddressResponse(AddressBase):
     id: int
-    created_at: datetime
-    updated_at: datetime
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
 
     class Config:
         orm_mode = True
