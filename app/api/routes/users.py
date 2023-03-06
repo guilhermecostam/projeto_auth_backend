@@ -20,7 +20,7 @@ def create(user: UserCreate, address: AddressCreate, db: Session = Depends(get_d
 
     return UserResponse.from_orm(user)
 
-@router.get("/{id}", response_model=UserResponse)
+@router.get("/{id}")
 def find_by_id(id: int, db: Session = Depends(get_db)):
     user = UserRepository.find_by_id(db, id)
     if not user:
@@ -28,7 +28,12 @@ def find_by_id(id: int, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND, detail="User don't found"
         )
 
-    return UserResponse.from_orm(user)
+    results = {
+        "user": UserResponse.from_orm(user),
+        "address": AddressResponse.from_orm(user.address),
+    }
+
+    return results
 
 @router.put("/{id}", response_model=UserResponse)
 def update(
