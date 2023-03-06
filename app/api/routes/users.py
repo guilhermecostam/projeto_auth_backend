@@ -23,3 +23,13 @@ def find_by_id(id: int, db: Session = Depends(get_db)):
         )
 
     return UserResponse.from_orm(user)
+    
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_by_id(id: int, db: Session = Depends(get_db)):
+    if not UserRepository.exists_by_id(db, id):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User don't found"
+        )
+    UserRepository.delete_by_id(db, id)
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
