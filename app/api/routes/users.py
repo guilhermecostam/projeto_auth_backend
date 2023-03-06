@@ -13,3 +13,13 @@ router = APIRouter(prefix="/users", tags=["Users"])
 def create(request: UserCreate, db: Session = Depends(get_db)):
     user = UserRepository.save(db, User(**request.dict()))
     return UserResponse.from_orm(user)
+
+@router.get("/{id}", response_model=UserResponse)
+def find_by_id(id: int, db: Session = Depends(get_db)):
+    user = UserRepository.find_by_id(db, id)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User don't found"
+        )
+
+    return UserResponse.from_orm(user)

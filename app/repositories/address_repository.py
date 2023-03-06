@@ -3,7 +3,7 @@ from app.models.address import Address
 
 class AddressRepository:
     @staticmethod
-    def save(db: Session, address: Address) -> none:
+    def save(db: Session, address: Address) -> None:
         if address.id:
             db.merge(address)
         else:
