@@ -13,10 +13,6 @@ class AddressRepository:
         return address
 
     @staticmethod
-    def find_by_id(db: Session, id: int) -> Address:
-        return db.query(Address).filter(Address.id == id).first()
-
-    @staticmethod
     def exists_by_id(db: Session, id: int) -> bool:
         return db.query(Address).filter(Address.id == id).first() is not None
 
