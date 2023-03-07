@@ -25,6 +25,10 @@ class Settings(BaseSettings):
         DB_NAME
     )
 
+    ALGORITHM: str = os.getenv('ALGORITHM')
+    SECRET_KEY: str = os.getenv('SECRET_KEY')
+    MINUTES_TO_EXPIRE: int = os.getenv('MINUTES_TO_EXPIRE')
+
     class Config:
         case_sensitive = True
 

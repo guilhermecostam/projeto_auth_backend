@@ -18,6 +18,14 @@ class UserRepository:
         return db.query(User).filter(User.id == id).first()
 
     @staticmethod
+    def find_by_username(db: Session, username: str) -> User:
+        return db.query(User).filter(
+            (User.email == username) |
+            (User.cpf == username) |
+            (User.pis == username)
+        ).first()
+
+    @staticmethod
     def exists_by_id(db: Session, id: int) -> bool:
         return db.query(User).filter(User.id == id).first() is not None
 
