@@ -16,12 +16,16 @@ from app.schemas.address import AddressResponse, AddressCreate, AddressUpdate
 router = APIRouter(prefix="/users", tags=["Users"])
 
 @router.post("/create", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def create(user: UserCreate, address: AddressCreate, db: Session = Depends(get_db)):
-    check_unique_fields(db, user)
-    address = AddressRepository.save(db, Address(**address.dict()))
-    user.address_id = address.id
-    user.password = get_password_hash(user.password)
-    user = UserRepository.save(db, User(**user.dict()))
+def create(
+    user_request: UserCreate,
+    address_request: AddressCreate,
+    db: Session = Depends(get_db)
+):
+    check_unique_fields(db, user_request)
+    address = AddressRepository.save(db, Address(**address_request.dict()))
+    user_request.address_id = address.id
+    user_request.password = get_password_hash(user_request.password)
+    user = UserRepository.save(db, User(**user_request.dict()))
 
     return UserResponse.from_orm(user)
 
@@ -36,8 +40,8 @@ def find_by_id(current_user: User = Depends(get_current_user)):
 
 @router.put("/update", response_model=UserResponse)
 def update(
-    user: UserUpdate,
-    address: AddressUpdate,
+    user_request: UserUpdate,
+    address_request: AddressUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -45,9 +49,10 @@ def update(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User don't found"
         )
-    user = UserRepository.save(db, User(id=current_user.id, **user.dict()))
-    address.id = user.address_id
-    AddressRepository.save(db, Address(**address.dict()))
+    check_unique_fields(db, user_request)
+    user = UserRepository.save(db, User(id=current_user.id, **user_request.dict()))
+    address_request.id = user.address_id
+    AddressRepository.save(db, Address(**address_request.dict()))
 
     return UserResponse.from_orm(user)
 
