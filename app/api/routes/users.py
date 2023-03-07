@@ -7,6 +7,7 @@ from app.models.address import Address
 from app.database.session import get_db
 from app.database.base_model import Base
 from app.core.security import get_password_hash
+from app.core.validations import check_unique_fields
 from app.repositories.user_repository import UserRepository
 from app.repositories.address_repository import AddressRepository
 from app.schemas.user import UserResponse, UserCreate, UserUpdate
@@ -16,6 +17,7 @@ router = APIRouter(prefix="/users", tags=["Users"])
 
 @router.post("/create", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def create(user: UserCreate, address: AddressCreate, db: Session = Depends(get_db)):
+    check_unique_fields(db, user)
     address = AddressRepository.save(db, Address(**address.dict()))
     user.address_id = address.id
     user.password = get_password_hash(user.password)
