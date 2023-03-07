@@ -44,7 +44,7 @@ def create_access_token(*, data: dict, expires_delta: timedelta = None):
 def decode_access_token(db: Session, token):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
+        detail="Could not validate credentials, check if your session has expired.",
         headers={"WWW-Authenticate": "Bearer"},
     )
 

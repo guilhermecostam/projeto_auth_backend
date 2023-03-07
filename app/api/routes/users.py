@@ -32,29 +32,32 @@ def find_by_id(current_user: User = Depends(get_current_user)):
 
     return results
 
-@router.put("/{id}", response_model=UserResponse)
+@router.put("/update", response_model=UserResponse)
 def update(
-    id: int,
     user: UserUpdate,
     address: AddressUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    if not UserRepository.exists_by_id(db, id):
+    if not UserRepository.exists_by_id(db, current_user.id):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User don't found"
         )
-    user = UserRepository.save(db, User(id=id, **user.dict()))
+    user = UserRepository.save(db, User(id=current_user.id, **user.dict()))
     address.id = user.address_id
     AddressRepository.save(db, Address(**address.dict()))
 
     return UserResponse.from_orm(user)
 
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_by_id(id: int, db: Session = Depends(get_db)):
-    if not UserRepository.exists_by_id(db, id):
+@router.delete("/delete", status_code=status.HTTP_204_NO_CONTENT)
+def delete_by_id(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    if not UserRepository.exists_by_id(db, current_user.id):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User don't found"
         )
-    UserRepository.delete_by_id(db, id)
+    UserRepository.delete_by_id(db, current_user.id)
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
