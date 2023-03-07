@@ -7,6 +7,7 @@ from fastapi.security import OAuth2PasswordBearer
 
 from app.models.user import User
 from app.core.settings import settings
+from app.schemas.auth import TokenData
 from app.repositories.user_repository import UserRepository
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -40,7 +41,7 @@ def create_access_token(*, data: dict, expires_delta: timedelta = None):
 
     return encoded_jwt
 
-def decode_access_token(db, token):
+def decode_access_token(db: Session, token):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -56,10 +57,11 @@ def decode_access_token(db, token):
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
-        token_data = schemas.TokenData(email=email)
-    except PyJWTError:
+        token_data = TokenData(email=email)
+    except jwt.PyJWTError:
         raise credentials_exception
-    user = crud.get_user_by_email(db, email=token_data.email)
+    
+    user = UserRepository.find_by_username(db, username=token_data.email)
     if user is None:
         raise credentials_exception
 

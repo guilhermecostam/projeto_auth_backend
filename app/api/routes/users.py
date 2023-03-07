@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
 
+from app.api.deps import get_current_user
 from app.models.user import User
 from app.models.address import Address
 from app.database.session import get_db
@@ -22,17 +23,11 @@ def create(user: UserCreate, address: AddressCreate, db: Session = Depends(get_d
 
     return UserResponse.from_orm(user)
 
-@router.get("/{id}")
-def find_by_id(id: int, db: Session = Depends(get_db)):
-    user = UserRepository.find_by_id(db, id)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User don't found"
-        )
-
+@router.get("/me")
+def find_by_id(current_user: User = Depends(get_current_user)):
     results = {
-        "user": UserResponse.from_orm(user),
-        "address": AddressResponse.from_orm(user.address),
+        "user": UserResponse.from_orm(current_user),
+        "address": AddressResponse.from_orm(current_user.address),
     }
 
     return results
