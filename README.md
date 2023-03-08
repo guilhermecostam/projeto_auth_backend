@@ -19,7 +19,7 @@ These are the features I used in developing this project.
 
 ## Dependencies
 
-I have specified in 'requirements.txt' the dependencies used in this project. I tried to put everything in a container but couldn't do it in time. After installing them (using pip), you can go to the next step and run the application.
+First of all you need to install python 3, docker and docker-compose. I have specified in 'requirements.txt' the python dependencies used in this project. I tried to put everything in a container but couldn't do it in time. After installing them (using pip), you can go to the next step and run the application.
 
 ## Getting started
 
