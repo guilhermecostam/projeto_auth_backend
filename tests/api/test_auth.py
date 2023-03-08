@@ -1,6 +1,5 @@
 from fastapi import status
 from fastapi.testclient import TestClient
-from app.core.settings import settings
 from tests.utils.utils import random_email, random_lower_string
 
 users_prefix = "/api/v1/users"
