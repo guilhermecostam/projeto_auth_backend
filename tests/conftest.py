@@ -6,7 +6,6 @@ from fastapi.testclient import TestClient
 from app.database.session import get_db
 from app.main import app
 
-
 @pytest.fixture(scope="session")
 def db() -> Generator:
     yield get_db()
