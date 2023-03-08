@@ -8,3 +8,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     email: str = None
     permissions: str = "user"
+
+class LoginData(BaseModel):
+    username: str
+    password: str
